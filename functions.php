@@ -2903,7 +2903,7 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 		</td>
 	</tr>
 	<tr valign="top" id="<?php echo "post-".$issue_id; ?>">
-		<td id="ar_row_ind" align="right"><?php echo $issue_count; ?></td>				
+		<td id="ar_row_ind" align="right"><?php echo esc_html($issue_count); ?></td>				
 		<td width="98%" valign="middle">
 			<h2 class="citation_title"><a href="<?php echo esc_url(get_permalink($issue_id)); ?>"><?php echo esc_html($issue_title); ?></a></h2>
 		</td>
@@ -2917,7 +2917,7 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 			$numItems = count( $icp_authors_names_loop );
 			foreach ( $icp_authors_names_loop as $icp_authors_names ) {?>						
 				<a href="#"><?php echo esc_html($icp_authors_names['icp_author_name']); ?></a>
-				<sup><a href="#au1"><?php echo $icp_loop; ?></a></sup>
+				<sup><a href="#au1"><?php echo esc_html($icp_loop); ?></a></sup>
 			<?php  if( $numItems != $icp_loop ) { echo '; ';} $icp_loop++; 
 			} 
 			?>
@@ -2929,13 +2929,13 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 		<td></td>
 		<td colspan="2" id="r_li_listing">
 			<?php if( !empty( $ice_paper_category ) ) { ?>
-				<span><strong>Category:</strong> <?php echo $ice_paper_category; ?></span> <strong>|</strong>
+				<span><strong>Category:</strong> <?php echo esc_html($ice_paper_category); ?></span> <strong>|</strong>
 			<?php } ?>
 			<?php if( !empty( $ice_subject ) ) { ?>
-				<span><strong>Subject:</strong> <?php echo $ice_subject; ?></span> <strong>|</strong>
+				<span><strong>Subject:</strong> <?php echo esc_html($ice_subject); ?></span> <strong>|</strong>
 			<?php } ?>
 			<?php if( !empty( $icp_page_number ) ) { ?>
-				<span><strong>Page:</strong> <?php echo $icp_page_number; ?></span>
+				<span><strong>Page:</strong> <?php echo esc_html($icp_page_number); ?></span>
 			<?php } ?>
 		</td>
 	</tr>
@@ -2950,7 +2950,7 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 		<td colspan="2">
 			<ul class="indLnk">
 				<?php if( isset( $icp_abstract_content ) && !empty( $icp_abstract_content ) ) { ?>
-				<li><a title="<?php echo $issue_title; ?>" href="<?php echo esc_url(get_permalink($issue_id)); ?>">Abstract</a></li>
+				<li><a title="<?php echo esc_attr($issue_title); ?>" href="<?php echo esc_url(get_permalink($issue_id)); ?>">Abstract</a></li>
 				<?php $abstract_after_line = true; } ?>
 				<?php if ( isset( $ice_google_drive_pdf_link ) && ! empty( $ice_google_drive_pdf_link ) ) { ?>
 					<li>
@@ -2960,7 +2960,7 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 				<?php } elseif ( isset( $ice_pdf_upload ) && ! empty( $ice_pdf_upload ) ) { ?>
 					<li>
 						<?php if ( $abstract_after_line ) { echo '| '; } ?>
-						<a title="<?php echo esc_attr( $issue_title ); ?>" href="<?php echo esc_url($ice_pdf_upload); ?>" download target="_blank" class="pdf">PDF (<?php echo $fileSize; ?>)</a>
+						<a title="<?php echo esc_attr( $issue_title ); ?>" href="<?php echo esc_url($ice_pdf_upload); ?>" download target="_blank" class="pdf">PDF (<?php echo esc_html($fileSize); ?>)</a>
 					</li>
 				<?php } 
 				
@@ -2979,31 +2979,31 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 							<?php if( !empty( $ice_mla ) ) { ?>
 							<tr>
 								<td>MLA</td>
-								<td><?php echo $ice_mla ; ?></td>
+								<td><?php echo esc_html($ice_mla); ?></td>
 							</tr>
 							<?php } 
 							if( !empty( $ice_apa ) ) { ?>
 							<tr>
 								<td>APA</td>
-								<td><?php echo $ice_apa ; ?></td>
+								<td><?php echo esc_html($ice_apa); ?></td>
 							</tr>
 							<?php } 
 							if( !empty( $ice_chicago ) ) { ?>
 							<tr>
 								<td>CHICAGO</td>
-								<td><?php echo $ice_chicago ; ?></td>
+								<td><?php echo esc_html($ice_chicago); ?></td>
 							</tr>
 							<?php } 
 							if( !empty( $ice_harvard ) ) { ?>
 							<tr>
 								<td>HARVARD</td>
-								<td><?php echo $ice_harvard; ?></td>
+								<td><?php echo esc_html($ice_harvard); ?></td>
 							</tr>
 							<?php } 
 							if( !empty( $ice_vancouver ) ) { ?>
 							<tr>
 								<td>VANCOUVER</td>
-								<td><?php echo $ice_vancouver; ?></td>
+								<td><?php echo esc_html($ice_vancouver); ?></td>
 							</tr>
 							<?php } ?>
 						</table>

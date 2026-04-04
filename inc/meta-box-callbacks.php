@@ -39,8 +39,8 @@ function rr_editorial_meta_box_callback( $post ) {
 				if ( ! empty( $editor_in_chief ) ) {
 					foreach ( $editor_in_chief as $index => $eic ) {
 						?>
-						<div class="rr-repeater-row" data-index="<?php echo $index; ?>">
-							<input type="text" name="editor_in_chief[<?php echo $index; ?>][eic_name]"
+						<div class="rr-repeater-row" data-index="<?php echo esc_attr($index); ?>">
+							<input type="text" name="editor_in_chief[<?php echo esc_attr($index); ?>][eic_name]"
 								   value="<?php echo esc_attr( $eic['eic_name'] ?? '' ); ?>"
 								   placeholder="<?php _e( 'Name', 'twentyseventeen' ); ?>" />
 							<button type="button" class="button rr-remove-row"><?php _e( 'Remove', 'twentyseventeen' ); ?></button>
@@ -110,22 +110,22 @@ function rr_reviewers_meta_box_callback( $post ) {
 				if ( ! empty( $journal_reviewers_members ) ) {
 					foreach ( $journal_reviewers_members as $index => $reviewer ) {
 						?>
-						<div class="rr-repeater-row" data-index="<?php echo $index; ?>">
+						<div class="rr-repeater-row" data-index="<?php echo esc_attr($index); ?>">
 							<div class="rr-field-row">
 								<label><?php _e( 'Name:', 'twentyseventeen' ); ?></label>
-								<input type="text" name="journal_reviewers_members[<?php echo $index; ?>][rr_jr_name]"
+								<input type="text" name="journal_reviewers_members[<?php echo esc_attr($index); ?>][rr_jr_name]"
 									   value="<?php echo esc_attr( $reviewer['rr_jr_name'] ?? '' ); ?>"
 									   placeholder="<?php _e( 'Reviewer Name', 'twentyseventeen' ); ?>" />
 							</div>
 							<div class="rr-field-row">
 								<label><?php _e( 'Designation:', 'twentyseventeen' ); ?></label>
-								<input type="text" name="journal_reviewers_members[<?php echo $index; ?>][rr_jr_designation]"
+								<input type="text" name="journal_reviewers_members[<?php echo esc_attr($index); ?>][rr_jr_designation]"
 									   value="<?php echo esc_attr( $reviewer['rr_jr_designation'] ?? '' ); ?>"
 									   placeholder="<?php _e( 'Designation', 'twentyseventeen' ); ?>" />
 							</div>
 							<div class="rr-field-row">
 								<label><?php _e( 'Area of Interest:', 'twentyseventeen' ); ?></label>
-								<input type="text" name="journal_reviewers_members[<?php echo $index; ?>][rr_jr_area_of_interest]"
+								<input type="text" name="journal_reviewers_members[<?php echo esc_attr($index); ?>][rr_jr_area_of_interest]"
 									   value="<?php echo esc_attr( $reviewer['rr_jr_area_of_interest'] ?? '' ); ?>"
 									   placeholder="<?php _e( 'Area of Interest', 'twentyseventeen' ); ?>" />
 							</div>
@@ -170,40 +170,40 @@ function rr_reviewers_meta_box_callback( $post ) {
  */
 function rr_render_board_member_row( $index, $ebm ) {
 	?>
-	<div class="rr-repeater-row rr-complex-row" data-index="<?php echo $index; ?>">
+	<div class="rr-repeater-row rr-complex-row" data-index="<?php echo esc_attr($index); ?>">
 		<div class="rr-row-header">
-			<h5><?php _e( 'Board Member', 'twentyseventeen' ); ?> #<?php echo $index + 1; ?></h5>
+			<h5><?php _e( 'Board Member', 'twentyseventeen' ); ?> #<?php echo esc_html($index + 1); ?></h5>
 			<button type="button" class="button rr-remove-row"><?php _e( 'Remove', 'twentyseventeen' ); ?></button>
 		</div>
 
 		<div class="rr-row-content">
 			<div class="rr-field-row">
 				<label><?php _e( 'Name:', 'twentyseventeen' ); ?></label>
-				<input type="text" name="editorial_board_members[<?php echo $index; ?>][ebm_name]"
+				<input type="text" name="editorial_board_members[<?php echo esc_attr($index); ?>][ebm_name]"
 					   value="<?php echo esc_attr( $ebm['ebm_name'] ?? '' ); ?>" />
 			</div>
 
 			<div class="rr-field-row">
 				<label><?php _e( 'Email:', 'twentyseventeen' ); ?></label>
-				<input type="email" name="editorial_board_members[<?php echo $index; ?>][ebm_email]"
+				<input type="email" name="editorial_board_members[<?php echo esc_attr($index); ?>][ebm_email]"
 					   value="<?php echo esc_attr( $ebm['ebm_email'] ?? '' ); ?>" />
 			</div>
 
 			<div class="rr-field-row">
 				<label><?php _e( 'Education/Degree:', 'twentyseventeen' ); ?></label>
-				<input type="text" name="editorial_board_members[<?php echo $index; ?>][ebm_education_degree]"
+				<input type="text" name="editorial_board_members[<?php echo esc_attr($index); ?>][ebm_education_degree]"
 					   value="<?php echo esc_attr( $ebm['ebm_education_degree'] ?? '' ); ?>" />
 			</div>
 
 			<div class="rr-field-row">
 				<label><?php _e( 'Affiliation/Institute:', 'twentyseventeen' ); ?></label>
-				<input type="text" name="editorial_board_members[<?php echo $index; ?>][ebm_affiliation_institute]"
+				<input type="text" name="editorial_board_members[<?php echo esc_attr($index); ?>][ebm_affiliation_institute]"
 					   value="<?php echo esc_attr( $ebm['ebm_affiliation_institute'] ?? '' ); ?>" />
 			</div>
 
 			<div class="rr-field-row">
 				<label><?php _e( 'Role:', 'twentyseventeen' ); ?></label>
-				<input type="text" name="editorial_board_members[<?php echo $index; ?>][ebm_role]"
+				<input type="text" name="editorial_board_members[<?php echo esc_attr($index); ?>][ebm_role]"
 					   value="<?php echo esc_attr( $ebm['ebm_role'] ?? '' ); ?>" />
 			</div>
 
@@ -224,9 +224,9 @@ function rr_render_board_member_row( $index, $ebm ) {
 					$profile_data = $ebm['ebm_web_profiles'][0][$profile_key] ?? array();
 					?>
 					<div class="rr-profile-row">
-						<label><?php echo $profile_label; ?>:</label>
+						<label><?php echo esc_html($profile_label); ?>:</label>
 						<input type="url"
-							   name="editorial_board_members[<?php echo $index; ?>][ebm_web_profiles][0][<?php echo $profile_key; ?>][url]"
+							   name="editorial_board_members[<?php echo esc_attr($index); ?>][ebm_web_profiles][0][<?php echo esc_attr($profile_key); ?>][url]"
 							   value="<?php echo esc_attr( $profile_data['url'] ?? '' ); ?>"
 							   placeholder="<?php _e( 'URL', 'twentyseventeen' ); ?>" />
 						<input type="text"
@@ -335,7 +335,7 @@ function rr_academic_paper_meta_box_callback( $post ) {
 				if ( ! empty( $icp_authors_names ) ) {
 					foreach ( $icp_authors_names as $index => $author ) {
 						?>
-						<div class="rr-repeater-row" data-index="<?php echo $index; ?>">
+						<div class="rr-repeater-row" data-index="<?php echo esc_attr($index); ?>">
 							<div class="rr-field-row">
 								<label><?php _e( 'Author Name:', 'twentyseventeen' ); ?></label>
 								<input type="text" name="icp_authors_names[<?php echo $index; ?>][icp_author_name]"

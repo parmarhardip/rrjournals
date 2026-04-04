@@ -38,9 +38,9 @@ function rudr_display_select2_metabox( $post_object ) {
 			// if the post title is too long, truncate it and add "..." at the end
 			$title = ( mb_strlen( $title ) > 50 ) ? mb_substr( $title, 0, 49 ) . '...' : $title;
 			if( !empty( $paper_posts ) && in_array( $paper_post->ID, $paper_posts ) ) {
-				$html .=  '<option value="' . $paper_post->ID . '" selected="selected">' . $title . '</option>';			
+				$html .=  '<option value="' . esc_attr($paper_post->ID) . '" selected="selected">' . esc_html($title) . '</option>';			
 			} else {
-				$html .=  '<option value="' . $paper_post->ID . '">' . $title . '</option>';
+				$html .=  '<option value="' . esc_attr($paper_post->ID) . '">' . esc_html($title) . '</option>';
 			}
 		}
 	}
@@ -50,7 +50,7 @@ function rudr_display_select2_metabox( $post_object ) {
 		$html .='<div><label for="rr_sp_select2_paper_list">Paper Listing:</label>';
 		$html .='<table>';
 		foreach( $paper_posts as $paper_post_id ) {		
-			$html .='<tr><td style="border: 1px solid;">'.$number.') '.get_the_title( $paper_post_id ).'</td></tr>';
+			$html .='<tr><td style="border: 1px solid;">'.esc_html($number).') '.esc_html(get_the_title( $paper_post_id )).'</td></tr>';
 			$number++;
 		}	
 		$html .='</table></div>';
@@ -93,7 +93,7 @@ function rr_special_paper_list_ajax_callback(){
  
 	// you can use WP_Query, query_posts() or get_posts() here - it doesn't matter
 	$search_results = new WP_Query( array( 
-		's'=> $_GET['q'], // the search query
+		's'=> sanitize_text_field($_GET['q']), // the search query
 		'post_status' => 'publish', // if you don't want drafts to be returned
 		'ignore_sticky_posts' => 1,
 		'posts_per_page' => -1, // how much to show at once
