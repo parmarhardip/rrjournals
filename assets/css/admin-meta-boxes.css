@@ -1,0 +1,286 @@
+/**
+ * RRJournal Meta Box Admin Styles
+ * Styling for CFS replacement meta boxes
+ */
+
+/* Meta Box Container */
+.rr-meta-box-container {
+    padding: 12px;
+}
+
+/* Field Groups */
+.rr-field-group {
+    margin-bottom: 25px;
+    border: 1px solid #e1e1e1;
+    padding: 15px;
+    background: #fff;
+}
+
+.rr-field-group h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e1e1e1;
+    color: #23282d;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Field Rows */
+.rr-field-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 10px;
+}
+
+.rr-field-row label {
+    font-weight: 600;
+    min-width: 140px;
+    padding-top: 6px;
+    color: #1d2327;
+}
+
+.rr-field-row input,
+.rr-field-row textarea,
+.rr-field-row select {
+    flex: 1;
+    min-width: 0;
+    padding: 6px 8px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+}
+
+.rr-field-row input:focus,
+.rr-field-row textarea:focus,
+.rr-field-row select:focus {
+    border-color: #007cba;
+    box-shadow: 0 0 0 1px #007cba;
+    outline: 2px solid transparent;
+}
+
+.rr-field-row textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Repeater Fields */
+.rr-repeater-fields {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.rr-repeater-row {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 12px;
+    position: relative;
+}
+
+.rr-repeater-row:last-child {
+    margin-bottom: 0;
+}
+
+.rr-repeater-row .rr-remove-row {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: #d63638;
+    border-color: #d63638;
+}
+
+.rr-repeater-row .rr-remove-row:hover {
+    background-color: #d63638;
+    color: #fff;
+}
+
+/* Complex Repeater Rows (Board Members) */
+.rr-complex-row {
+    border: 2px solid #ddd;
+    border-radius: 6px;
+}
+
+.rr-row-header {
+    background: #f0f0f1;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 12px;
+    margin: -12px -12px 12px -12px;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rr-row-header h5 {
+    margin: 0;
+    cursor: pointer;
+    color: #1d2327;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.rr-row-header h5:hover {
+    color: #135e96;
+}
+
+.rr-row-content {
+    padding-top: 8px;
+}
+
+/* Web Profiles Section */
+.rr-web-profiles {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e1e1e1;
+}
+
+.rr-web-profiles h6 {
+    margin: 0 0 10px 0;
+    color: #646970;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.rr-profile-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr auto;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.rr-profile-row:last-child {
+    border-bottom: none;
+}
+
+.rr-profile-row label {
+    font-size: 11px;
+    color: #646970;
+    min-width: auto;
+    padding-top: 2px;
+}
+
+.rr-profile-row input,
+.rr-profile-row select {
+    font-size: 12px;
+    padding: 4px 6px;
+}
+
+.rr-profile-row select {
+    max-width: 130px;
+}
+
+/* File Upload */
+.rr-file-upload {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.rr-file-preview {
+    font-size: 12px;
+    color: #646970;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rr-upload-file,
+.rr-remove-file {
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+    height: auto !important;
+    line-height: 1.4 !important;
+}
+
+/* Add Row Buttons */
+.rr-add-row {
+    background: #007cba !important;
+    border-color: #007cba !important;
+    color: #fff !important;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+.rr-add-row:hover {
+    background: #005a87 !important;
+    border-color: #005a87 !important;
+    color: #fff !important;
+}
+
+/* Empty States */
+.rr-repeater-fields:empty::before {
+    content: "No items added yet. Click the button below to add the first item.";
+    display: block;
+    text-align: center;
+    color: #646970;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 782px) {
+    .rr-field-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rr-field-row label {
+        min-width: auto;
+        margin-bottom: 4px;
+        padding-top: 0;
+    }
+
+    .rr-profile-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    .rr-profile-row label {
+        font-weight: 600;
+        color: #1d2327;
+    }
+
+    .rr-repeater-row .rr-remove-row {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .rr-row-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+}
+
+/* Loading States */
+.rr-repeater-fields.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.rr-repeater-fields.loading::after {
+    content: "Loading...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-weight: 600;
+    color: #646970;
+}

@@ -44,21 +44,21 @@
 			?>
 		</header><!-- .entry-header -->
 		<?php 
-			$icp_atricle_number        = CFS()->get( 'icp_atricle_number' );
-    		$icp_year_and_month        = CFS()->get( 'icp_year_and_month' );
-    		$icp_page_number           = CFS()->get( 'icp_page_number' );
-    		$ice_published_online      = CFS()->get( 'ice_published_online' );
-    		$icp_doi                   = CFS()->get( 'icp_doi' );
-    		$icp_authors_names_loop    = CFS()->get( 'icp_authors_names' );
-    		$icp_abstract_content      = CFS()->get( 'icp_abstract_content' );
-    		$ice_keywords              = CFS()->get( 'ice_keywords' );
-    		$ice_pdf_upload            = CFS()->get( 'ice_pdf_upload' );
-    		$ice_google_drive_pdf_link = CFS()->get( 'ice_google_drive_pdf_link' );
-    		$ice_paper_category        = CFS()->get( 'ice_paper_category' );
-    		$ice_subject               = CFS()->get( 'ice_subject' );
-    		$file_id                   = CFS()->get( 'ice_pdf_upload', get_the_ID(), array( 'format' => 'raw' ) );
+			$icp_atricle_number        = rr_get_field( 'icp_atricle_number' );
+    		$icp_year_and_month        = rr_get_field( 'icp_year_and_month' );
+    		$icp_page_number           = rr_get_field( 'icp_page_number' );
+    		$ice_published_online      = rr_get_field( 'ice_published_online' );
+    		$icp_doi                   = rr_get_field( 'icp_doi' );
+    		$icp_authors_names_loop    = rr_get_field( 'icp_authors_names' );
+    		$icp_abstract_content      = rr_get_field( 'icp_abstract_content' );
+    		$ice_keywords              = rr_get_field( 'ice_keywords' );
+    		$ice_pdf_upload            = rr_get_field( 'ice_pdf_upload' );
+    		$ice_google_drive_pdf_link = rr_get_field( 'ice_google_drive_pdf_link' );
+    		$ice_paper_category        = rr_get_field( 'ice_paper_category' );
+    		$ice_subject               = rr_get_field( 'ice_subject' );
+    		$file_id                   = rr_get_field_raw( 'ice_pdf_upload', get_the_ID() );
     		$fileSize                  = get_file_size( $file_id );
-    		$postcat                   = get_article_category( $issue_id );		
+    		$postcat                   = get_article_category( get_the_ID() );
 			
 
 			?>

@@ -20,7 +20,7 @@
 		<div class="board-box">
 		<h3>Editor-in-Chief</h3>
 		<?php
-		$eics = CFS()->get( 'editor_in_chief' );
+		$eics = rr_get_field( 'editor_in_chief' );
 		if( isset( $eics ) && !empty( $eics ) && is_array( $eics ) ) {
 			echo "<ul>";
 			foreach ( $eics as $eic ) {
@@ -33,7 +33,7 @@
 		<div class="board-box">
 		<h3>Editorial Board Members </h3>
 		<?php
-		$ebms = CFS()->get( 'editorial_board_members' );
+		$ebms = rr_get_field( 'editorial_board_members' );
 		if( isset( $ebms ) && !empty( $ebms ) && is_array( $ebms ) ) {
 			echo "<ol>";
 			foreach ( $ebms as $ebm ) {

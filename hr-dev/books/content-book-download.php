@@ -116,11 +116,11 @@ $book_query = new WP_Query($args);
 				</tr>
 				<?php while ( $book_query->have_posts() ) : $book_query->the_post(); ?>
 				<?php
-					$hrbd_choose_btn = CFS()->get('hrbd_choose_button');
-					$book_image_url = CFS()->get( 'hrbd_cover_page_image' );
-					$title_of_the_book = CFS()->get( 'hrbd_title_of_the_book' );
-					$authors_name = CFS()->get( 'hrbd_authors_name' );
-					$isbn_number = CFS()->get( 'hrbd_isbn_number' );
+					$hrbd_choose_btn = rr_get_field('hrbd_choose_button');
+					$book_image_url = rr_get_field( 'hrbd_cover_page_image' );
+					$title_of_the_book = rr_get_field( 'hrbd_title_of_the_book' );
+					$authors_name = rr_get_field( 'hrbd_authors_name' );
+					$isbn_number = rr_get_field( 'hrbd_isbn_number' );
 				?>
 				<tr>
 					<td><img src="<?php echo esc_url($book_image_url); ?>"  width="100" height="150"/></td>
@@ -129,12 +129,12 @@ $book_query = new WP_Query($args);
 					<td><?php echo esc_html($isbn_number); ?></td>
 					<?php if( isset($hrbd_choose_btn) && !empty($hrbd_choose_btn) && in_array('Download',$hrbd_choose_btn) ) {	?>
 						<td>
-						<form action="<?php echo CFS()->get( 'hrbd_download' ); ?>" method="post" target="_blank">
+						<form action="<?php echo rr_get_field( 'hrbd_download' ); ?>" method="post" target="_blank">
 						<button type="submit" class="download-btn" vlaue=""><?php esc_html_e('Download','rrjounrls'); ?></button>
 						</form>
 						</td>
 					<?php } else { ?>
-						<td><?php echo CFS()->get( 'hrbd_buy_now' ); ?></td>
+						<td><?php echo rr_get_field( 'hrbd_buy_now' ); ?></td>
 					<?php } ?>
 				</tr>
 				<?php endwhile; // end of the loop. ?>

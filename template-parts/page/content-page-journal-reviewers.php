@@ -19,7 +19,7 @@
 	</header><!-- .entry-header -->
 	<div class="board-box">
 	<?php
-	$jrms = CFS()->get( 'journal_reviewers_members' );
+	$jrms = rr_get_field( 'journal_reviewers_members' );
 	if( isset( $jrms ) && !empty( $jrms ) && is_array( $jrms ) ) {
 		echo "<ol>";
 		foreach ( $jrms as $jrm ) {
