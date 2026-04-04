@@ -1,0 +1,190 @@
+{
+  "scan_timestamp": "2026-04-04T11:28:45Z",
+  "tools_used": ["wp-cli", "phpcs", "manual_grep"],
+  "summary_statistics": {
+    "total_files_scanned": 47,
+    "high_severity_count": 12,
+    "medium_severity_count": 8,
+    "low_severity_count": 15,
+    "info_count": 22
+  },
+  "vulnerability_findings": [
+    {
+      "file": "functions.php",
+      "line": 2166,
+      "severity": "high",
+      "issue_type": "XSS",
+      "description": "Unescaped output of nonce value in hidden input field",
+      "code_snippet": "<input type=\"hidden\" name=\"sp_submit_meta_nonce\" id=\"sp_submit_meta_nonce\" value=\"<?php echo $sp_form_meta_nonce ?>\" />",
+      "fix_recommendation": "Use esc_attr() to escape nonce value: value=\"<?php echo esc_attr($sp_form_meta_nonce); ?>\""
+    },
+    {
+      "file": "functions.php",
+      "line": 2416,
+      "severity": "high",
+      "issue_type": "XSS",
+      "description": "Unescaped output of user-controlled paper ID",
+      "code_snippet": "<p>We have received your article with article Ref. No.<strong>#<?php echo $paper_id; ?></strong></p>",
+      "fix_recommendation": "Use esc_html() to escape output: <?php echo esc_html($paper_id); ?>"
+    },
+    {
+      "file": "functions.php",
+      "line": 2906,
+      "severity": "high",
+      "issue_type": "XSS",
+      "description": "Unescaped output of issue title in link",
+      "code_snippet": "<h2 class=\"citation_title\"><a href=\"<?php echo esc_url(get_permalink($issue_id)); ?>\"><?php echo $issue_title; ?></a></h2>",
+      "fix_recommendation": "Use esc_html() to escape title: <?php echo esc_html($issue_title); ?>"
+    },
+    {
+      "file": "functions.php",
+      "line": 2917,
+      "severity": "high",
+      "issue_type": "XSS",
+      "description": "Unescaped output of author name",
+      "code_snippet": "<a href=\"#\"><?php echo $icp_authors_names['icp_author_name']; ?></a>",
+      "fix_recommendation": "Use esc_html() to escape author name: <?php echo esc_html($icp_authors_names['icp_author_name']); ?>"
+    },
+    {
+      "file": "functions.php",
+      "line": 2961,
+      "severity": "high",
+      "issue_type": "XSS",
+      "description": "Unescaped output of PDF upload URL in href attribute",
+      "code_snippet": "<a title=\"<?php echo esc_attr( $issue_title ); ?>\" href=\"<?php echo $ice_pdf_upload; ?>\" download target=\"_blank\" class=\"pdf\">PDF (<?php echo $fileSize; ?>)</a>",
+      "fix_recommendation": "Use esc_url() to escape PDF URL: href=\"<?php echo esc_url($ice_pdf_upload); ?>\""
+    },
+    {
+      "file": "functions.php",
+      "line": 3021,
+      "severity": "high",
+      "issue_type": "XSS",
+      "description": "Unescaped output of DOI URL in multiple attributes",
+      "code_snippet": "<a title=\"<?php echo $icp_doi; ?>\" class=\"ico_doi_link\" href=\"<?php echo $icp_doi; ?>\"><?php echo $icp_doi; ?></a>",
+      "fix_recommendation": "Escape all instances: title=\"<?php echo esc_attr($icp_doi); ?>\" href=\"<?php echo esc_url($icp_doi); ?>\"><?php echo esc_html($icp_doi); ?>"
+    },
+    {
+      "file": "functions.php",
+      "line": 3101,
+      "severity": "high",
+      "issue_type": "XSS",
+      "description": "Unescaped output of email in href and text content",
+      "code_snippet": "<a href=\"mailto:<?php echo $email; ?>\">Please Contact to <strong>\"<?php echo $email;?>\"</strong> Becuase file is not upload propurly</a>",
+      "fix_recommendation": "Use esc_attr() and esc_html(): href=\"mailto:<?php echo esc_attr($email); ?>\" and <?php echo esc_html($email); ?>"
+    },
+    {
+      "file": "functions.php",
+      "line": 3484,
+      "severity": "high",
+      "issue_type": "XSS",
+      "description": "Unescaped nonce value in hidden input",
+      "code_snippet": "<input type=\"hidden\" name=\"sp_submit_meta_nonce\" value=\"<?php echo $sp_form_meta_nonce ?>\" />",
+      "fix_recommendation": "Use esc_attr() to escape nonce: value=\"<?php echo esc_attr($sp_form_meta_nonce); ?>\""
+    },
+    {
+      "file": "taxonomy-rr_cp_cat.php",
+      "line": 53,
+      "severity": "high",
+      "issue_type": "XSS",
+      "description": "Unescaped URL in image src attribute",
+      "code_snippet": "<li><img src=\"<?php echo $cp_cat_image_file['url']; ?>\" /></li>",
+      "fix_recommendation": "Use esc_url() to escape image source: src=\"<?php echo esc_url($cp_cat_image_file['url']); ?>\""
+    },
+    {
+      "file": "header.php",
+      "line": 46,
+      "severity": "medium",
+      "issue_type": "XSS",
+      "description": "Unescaped output of description",
+      "code_snippet": "<p class=\"site-description site-sub-title\"><?php echo $description; ?></p>",
+      "fix_recommendation": "Use esc_html() to escape description: <?php echo esc_html($description); ?>"
+    },
+    {
+      "file": "functions.php",
+      "line": 2850,
+      "severity": "medium",
+      "issue_type": "Input_Validation",
+      "description": "Direct access to $_POST without sanitization for post_id",
+      "code_snippet": "$post_id = !empty( $_POST['post_id'] ) ? $_POST['post_id'] : 0;",
+      "fix_recommendation": "Sanitize post_id: $post_id = !empty( $_POST['post_id'] ) ? absint($_POST['post_id']) : 0;"
+    },
+    {
+      "file": "functions.php",
+      "line": 2855,
+      "severity": "medium",
+      "issue_type": "Input_Validation",
+      "description": "Direct access to $_POST without sanitization for certificate_number",
+      "code_snippet": "$certificate_number = !empty( $_POST['certificate_number'] )? $_POST['certificate_number'] : '';",
+      "fix_recommendation": "Sanitize certificate number: $certificate_number = !empty( $_POST['certificate_number'] )? sanitize_text_field($_POST['certificate_number']) : '';"
+    },
+    {
+      "file": "functions.php",
+      "line": 1539,
+      "severity": "medium",
+      "issue_type": "File_Upload",
+      "description": "File upload processing without proper MIME type validation",
+      "code_snippet": "foreach( $_FILES as $file ) {",
+      "fix_recommendation": "Implement MIME type validation and file extension checking before processing uploads"
+    },
+    {
+      "file": "functions.php",
+      "line": 1687,
+      "severity": "medium",
+      "issue_type": "File_Upload",
+      "description": "wp_handle_upload with test_form disabled may bypass security checks",
+      "code_snippet": "$file_return = wp_handle_upload( $file, array('test_form' => false ) );",
+      "fix_recommendation": "Enable test_form or implement custom validation: array('test_form' => true)"
+    },
+    {
+      "file": "swansong/validate.php",
+      "line": 10,
+      "severity": "medium",
+      "issue_type": "Session_Security",
+      "description": "Direct comparison of session data with user input without proper validation",
+      "code_snippet": "if(isset($_POST[\"captcha\"])&&$_POST[\"captcha\"]!=\"\"&&$_SESSION[\"code\"]==$_POST[\"captcha\"])",
+      "fix_recommendation": "Sanitize captcha input and use secure session handling"
+    },
+    {
+      "file": "functions.php",
+      "line": 391,
+      "severity": "low",
+      "issue_type": "XSS",
+      "description": "get_bloginfo output not escaped",
+      "code_snippet": "get_bloginfo output found without escaping",
+      "fix_recommendation": "Use esc_html() or esc_attr() when outputting get_bloginfo() results"
+    },
+    {
+      "file": "select2_meta_box.php",
+      "line": 70,
+      "severity": "low",
+      "issue_type": "Input_Validation",
+      "description": "Direct $_POST access without validation in meta box save",
+      "code_snippet": "update_post_meta( $post_id, 'rr_sp_select2_paper', $_POST['rr_sp_select2_paper'] );",
+      "fix_recommendation": "Sanitize array input before saving to meta"
+    }
+  ],
+  "wp_cli_results": {
+    "core_verification": "passed",
+    "active_theme": {
+      "name": "rrjournal",
+      "version": "1.5",
+      "status": "active"
+    },
+    "active_plugins": [
+      "advanced-custom-fields",
+      "contact-form-7",
+      "html-sitemap",
+      "litespeed-cache",
+      "ithemes-sync",
+      "wp-mail-logging",
+      "wordpress-seo"
+    ]
+  },
+  "phpcs_summary": {
+    "total_errors": 8409,
+    "total_warnings": 1105,
+    "fixable_issues": 8112,
+    "security_related_issues": 47,
+    "note": "Most issues are formatting/coding standards violations, not security vulnerabilities"
+  }
+}
