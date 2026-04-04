@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Register custom meta boxes with conditional loading.
  */
 function rr_register_meta_boxes() {
-	// Editorial Board Meta Box - for pages with board-related templates
+	// Editorial Board Meta Box - for board-member pages only
 	$editorial_post_types = array( 'page' );
 	foreach ( $editorial_post_types as $post_type ) {
 		add_meta_box(
@@ -29,8 +29,22 @@ function rr_register_meta_boxes() {
 		);
 	}
 
-	// Academic Paper Meta Box - for issues, papers, and academic content
-	$academic_post_types = array( 'post', 'rr_issue', 'rr_cp_post', 'rr_special_issue', 'rr_sp_paper_list', 'rr_submited_paper' );
+	// Journal Reviewers Meta Box - for journal-reviewers pages only
+	$reviewer_post_types = array( 'page' );
+	foreach ( $reviewer_post_types as $post_type ) {
+		add_meta_box(
+			'rr_reviewers_meta_box',
+			__( 'Journal Reviewers Information', 'twentyseventeen' ),
+			'rr_reviewers_meta_box_callback',
+			$post_type,
+			'normal',
+			'high'
+		);
+	}
+
+	// Academic Paper Meta Box - matches CFS "Issue content page" rules: rr_issue, rr_sp_paper_list, rr_cp_post
+	// Additional types added for extended functionality: post, rr_special_issue, rr_submited_paper
+	$academic_post_types = array( 'rr_issue', 'rr_sp_paper_list', 'rr_cp_post', 'post', 'rr_special_issue', 'rr_submited_paper' );
 	foreach ( $academic_post_types as $post_type ) {
 		add_meta_box(
 			'rr_academic_paper_meta_box',
@@ -43,7 +57,7 @@ function rr_register_meta_boxes() {
 	}
 
 	// Book Information Meta Box - for HR development content
-	$book_post_types = array( 'hr_em', 'page' );
+	$book_post_types = array( 'books-download','hr_em', 'page' );
 	foreach ( $book_post_types as $post_type ) {
 		add_meta_box(
 			'rr_book_meta_box',
@@ -237,9 +251,17 @@ function rr_save_meta_box_data( $post_id ) {
 
 	// Save simple text fields
 	$simple_fields = array(
-		'icp_title_of_research_paper', 'icp_doi_number', 'icp_paper_url', 'icp_paper_pdf',
+		// Academic paper fields
+		'icp_atricle_number', 'icp_year_and_month', 'icp_page_number', 'ice_published_online',
+		'icp_doi', 'icp_abstract_content', 'ice_keywords', 'ice_pdf_upload', 'ice_google_drive_pdf_link',
+		'ice_paper_category', 'ice_subject',
+		// Citation format fields
+		'ice_mla', 'ice_apa', 'ice_chicago', 'ice_harvard', 'ice_vancouver',
+		// Book fields
 		'hrbd_title_of_the_book', 'hrbd_authors_name', 'hrbd_isbn_number',
-		'hrbd_cover_page_image', 'hrbd_download', 'hrbd_buy_now', 'hrbd_choose_button'
+		'hrbd_cover_page_image', 'hrbd_download', 'hrbd_buy_now', 'hrbd_choose_button',
+		// Legacy fields (if any)
+		'icp_title_of_research_paper', 'icp_doi_number', 'icp_paper_url', 'icp_paper_pdf'
 	);
 
 	foreach ( $simple_fields as $field ) {
@@ -384,25 +406,46 @@ add_action( 'admin_footer', 'rr_render_board_member_template' );
  */
 
 /**
- * Check if editorial meta box should display.
+ * Check if editorial meta box should display (board-member pages only).
  */
 function rr_should_show_editorial_metabox( $post ) {
-	// Show for pages that might have editorial content
+	// Show only for editorial board pages (matches CFS rules)
 	if ( 'page' === $post->post_type ) {
 		$page_template = get_page_template_slug( $post->ID );
-		$editorial_templates = array(
-			'page-board-member.php',
-			'page-journal-reviewers.php',
-			'page-jebm.php',
-			''
-		);
 
-		// Check by page slug if no specific template
+		// CFS rule: page + page-board-member.php template
+		if ( 'page-board-member.php' === $page_template ) {
+			return true;
+		}
+
+		// Fallback: Check by page slug
 		$page_slug = $post->post_name;
-		$editorial_slugs = array( 'board-member', 'editorial-board', 'journal-reviewers', 'reviewers', 'jebm' );
+		$editorial_slugs = array( 'board-member', 'editorial-board', 'jebm' );
 
-		return in_array( $page_template, $editorial_templates, true ) ||
-			   in_array( $page_slug, $editorial_slugs, true );
+		return in_array( $page_slug, $editorial_slugs, true );
+	}
+
+	return false;
+}
+
+/**
+ * Check if reviewers meta box should display (journal-reviewers pages only).
+ */
+function rr_should_show_reviewers_metabox( $post ) {
+	// Show only for journal reviewers pages (matches CFS rules)
+	if ( 'page' === $post->post_type ) {
+		$page_template = get_page_template_slug( $post->ID );
+
+		// CFS rule: page + page-journal-reviewers.php template
+		if ( 'page-journal-reviewers.php' === $page_template ) {
+			return true;
+		}
+
+		// Fallback: Check by page slug
+		$page_slug = $post->post_name;
+		$reviewer_slugs = array( 'journal-reviewers', 'reviewers' );
+
+		return in_array( $page_slug, $reviewer_slugs, true );
 	}
 
 	return false;
@@ -412,8 +455,8 @@ function rr_should_show_editorial_metabox( $post ) {
  * Check if academic paper meta box should display.
  */
 function rr_should_show_academic_metabox( $post ) {
-	// Show for academic content post types
-	$academic_types = array( 'post', 'rr_issue', 'rr_cp_post', 'rr_special_issue', 'rr_sp_paper_list', 'rr_submited_paper' );
+	// Show for academic content post types (matches CFS rules + extensions)
+	$academic_types = array( 'rr_issue', 'rr_sp_paper_list', 'rr_cp_post', 'post', 'rr_special_issue', 'rr_submited_paper' );
 	return in_array( $post->post_type, $academic_types, true );
 }
 
@@ -422,7 +465,7 @@ function rr_should_show_academic_metabox( $post ) {
  */
 function rr_should_show_book_metabox( $post ) {
 	// Show for HR development posts
-	if ( 'hr_em' === $post->post_type ) {
+	if ( 'books-download' === $post->post_type ) {
 		return true;
 	}
 

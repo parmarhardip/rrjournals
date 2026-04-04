@@ -56,9 +56,9 @@
     		$ice_google_drive_pdf_link = rr_get_field( 'ice_google_drive_pdf_link' );
     		$ice_paper_category        = rr_get_field( 'ice_paper_category' );
     		$ice_subject               = rr_get_field( 'ice_subject' );
-    		$file_id                   = rr_get_field( 'ice_pdf_upload', get_the_ID() );
+    		$file_id                   = rr_get_field_raw( 'ice_pdf_upload', get_the_ID() );
     		$fileSize                  = get_file_size( $file_id );
-    		$postcat                   = get_article_category( $issue_id );	
+    		$postcat                   = get_article_category( get_the_ID() );
 			
 
 			?>

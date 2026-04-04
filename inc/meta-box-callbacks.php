@@ -28,7 +28,6 @@ function rr_editorial_meta_box_callback( $post ) {
 	// Get existing data
 	$editor_in_chief = rr_get_meta_array( $post->ID, 'editor_in_chief' );
 	$editorial_board_members = rr_get_meta_array( $post->ID, 'editorial_board_members' );
-	$journal_reviewers_members = rr_get_meta_array( $post->ID, 'journal_reviewers_members' );
 
 	?>
 	<div class="rr-meta-box-container">
@@ -71,6 +70,38 @@ function rr_editorial_meta_box_callback( $post ) {
 					data-template="ebm-template"><?php _e( 'Add Board Member', 'twentyseventeen' ); ?></button>
 		</div>
 
+	</div>
+
+	<!-- Templates for JavaScript -->
+	<script type="text/html" id="eic-template">
+		<div class="rr-repeater-row" data-index="{{INDEX}}">
+			<input type="text" name="editor_in_chief[{{INDEX}}][eic_name]"
+				   value="" placeholder="<?php _e( 'Name', 'twentyseventeen' ); ?>" />
+			<button type="button" class="button rr-remove-row"><?php _e( 'Remove', 'twentyseventeen' ); ?></button>
+		</div>
+	</script>
+
+	<?php
+}
+
+/**
+ * Journal Reviewers Information Meta Box Callback
+ */
+function rr_reviewers_meta_box_callback( $post ) {
+	// Check if this meta box should display for this post/page
+	if ( ! rr_should_show_reviewers_metabox( $post ) ) {
+		echo '<p>' . __( 'Journal reviewers information is not applicable for this content type.', 'twentyseventeen' ) . '</p>';
+		return;
+	}
+
+	// Add nonce for security
+	wp_nonce_field( 'rr_save_meta_data', 'rr_meta_nonce' );
+
+	// Get existing data
+	$journal_reviewers_members = rr_get_meta_array( $post->ID, 'journal_reviewers_members' );
+
+	?>
+	<div class="rr-meta-box-container">
 		<!-- Journal Reviewers Section -->
 		<div class="rr-field-group">
 			<h4><?php _e( 'Journal Reviewers', 'twentyseventeen' ); ?></h4>
@@ -80,9 +111,24 @@ function rr_editorial_meta_box_callback( $post ) {
 					foreach ( $journal_reviewers_members as $index => $reviewer ) {
 						?>
 						<div class="rr-repeater-row" data-index="<?php echo $index; ?>">
-							<input type="text" name="journal_reviewers_members[<?php echo $index; ?>][reviewer_name]"
-								   value="<?php echo esc_attr( $reviewer['reviewer_name'] ?? '' ); ?>"
-								   placeholder="<?php _e( 'Reviewer Name', 'twentyseventeen' ); ?>" />
+							<div class="rr-field-row">
+								<label><?php _e( 'Name:', 'twentyseventeen' ); ?></label>
+								<input type="text" name="journal_reviewers_members[<?php echo $index; ?>][rr_jr_name]"
+									   value="<?php echo esc_attr( $reviewer['rr_jr_name'] ?? '' ); ?>"
+									   placeholder="<?php _e( 'Reviewer Name', 'twentyseventeen' ); ?>" />
+							</div>
+							<div class="rr-field-row">
+								<label><?php _e( 'Designation:', 'twentyseventeen' ); ?></label>
+								<input type="text" name="journal_reviewers_members[<?php echo $index; ?>][rr_jr_designation]"
+									   value="<?php echo esc_attr( $reviewer['rr_jr_designation'] ?? '' ); ?>"
+									   placeholder="<?php _e( 'Designation', 'twentyseventeen' ); ?>" />
+							</div>
+							<div class="rr-field-row">
+								<label><?php _e( 'Area of Interest:', 'twentyseventeen' ); ?></label>
+								<input type="text" name="journal_reviewers_members[<?php echo $index; ?>][rr_jr_area_of_interest]"
+									   value="<?php echo esc_attr( $reviewer['rr_jr_area_of_interest'] ?? '' ); ?>"
+									   placeholder="<?php _e( 'Area of Interest', 'twentyseventeen' ); ?>" />
+							</div>
 							<button type="button" class="button rr-remove-row"><?php _e( 'Remove', 'twentyseventeen' ); ?></button>
 						</div>
 						<?php
@@ -95,19 +141,24 @@ function rr_editorial_meta_box_callback( $post ) {
 		</div>
 	</div>
 
-	<!-- Templates for JavaScript -->
-	<script type="text/html" id="eic-template">
-		<div class="rr-repeater-row" data-index="{{INDEX}}">
-			<input type="text" name="editor_in_chief[{{INDEX}}][eic_name]"
-				   value="" placeholder="<?php _e( 'Name', 'twentyseventeen' ); ?>" />
-			<button type="button" class="button rr-remove-row"><?php _e( 'Remove', 'twentyseventeen' ); ?></button>
-		</div>
-	</script>
-
+	<!-- Reviewer Template for JavaScript -->
 	<script type="text/html" id="reviewer-template">
 		<div class="rr-repeater-row" data-index="{{INDEX}}">
-			<input type="text" name="journal_reviewers_members[{{INDEX}}][reviewer_name]"
-				   value="" placeholder="<?php _e( 'Reviewer Name', 'twentyseventeen' ); ?>" />
+			<div class="rr-field-row">
+				<label><?php _e( 'Name:', 'twentyseventeen' ); ?></label>
+				<input type="text" name="journal_reviewers_members[{{INDEX}}][rr_jr_name]"
+					   value="" placeholder="<?php _e( 'Reviewer Name', 'twentyseventeen' ); ?>" />
+			</div>
+			<div class="rr-field-row">
+				<label><?php _e( 'Designation:', 'twentyseventeen' ); ?></label>
+				<input type="text" name="journal_reviewers_members[{{INDEX}}][rr_jr_designation]"
+					   value="" placeholder="<?php _e( 'Designation', 'twentyseventeen' ); ?>" />
+			</div>
+			<div class="rr-field-row">
+				<label><?php _e( 'Area of Interest:', 'twentyseventeen' ); ?></label>
+				<input type="text" name="journal_reviewers_members[{{INDEX}}][rr_jr_area_of_interest]"
+					   value="" placeholder="<?php _e( 'Area of Interest', 'twentyseventeen' ); ?>" />
+			</div>
 			<button type="button" class="button rr-remove-row"><?php _e( 'Remove', 'twentyseventeen' ); ?></button>
 		</div>
 	</script>
@@ -444,8 +495,17 @@ function rr_book_meta_box_callback( $post ) {
 			</div>
 
 			<div class="rr-field-row">
-				<label><?php _e( 'Download URL:', 'twentyseventeen' ); ?></label>
-				<input type="url" name="hrbd_download" value="<?php echo esc_attr( $book_fields['hrbd_download'] ); ?>" />
+				<label><?php _e( 'Download File:', 'twentyseventeen' ); ?></label>
+				<div class="rr-file-upload">
+					<input type="hidden" name="hrbd_download" id="hrbd_download" value="<?php echo esc_attr( $book_fields['hrbd_download'] ); ?>" />
+					<input type="button" class="button rr-upload-file" data-target="hrbd_download" value="<?php _e( 'Choose File', 'twentyseventeen' ); ?>" />
+					<span class="rr-file-preview">
+						<?php if ( $book_fields['hrbd_download'] ) : ?>
+							<?php echo esc_html( basename( $book_fields['hrbd_download'] ) ); ?>
+							<button type="button" class="button rr-remove-file" data-target="hrbd_download"><?php _e( 'Remove', 'twentyseventeen' ); ?></button>
+						<?php endif; ?>
+					</span>
+				</div>
 			</div>
 
 			<div class="rr-field-row">
@@ -454,8 +514,12 @@ function rr_book_meta_box_callback( $post ) {
 			</div>
 
 			<div class="rr-field-row">
-				<label><?php _e( 'Choose Button Text:', 'twentyseventeen' ); ?></label>
-				<input type="text" name="hrbd_choose_button" value="<?php echo esc_attr( $book_fields['hrbd_choose_button'] ); ?>" />
+				<label><?php _e( 'Choose Button:', 'twentyseventeen' ); ?></label>
+				<select name="hrbd_choose_button">
+					<option value=""><?php _e( 'Select Option', 'twentyseventeen' ); ?></option>
+					<option value="Download" <?php selected( $book_fields['hrbd_choose_button'], 'Download' ); ?>><?php _e( 'Download', 'twentyseventeen' ); ?></option>
+					<option value="Buy Now" <?php selected( $book_fields['hrbd_choose_button'], 'Buy Now' ); ?>><?php _e( 'Buy Now', 'twentyseventeen' ); ?></option>
+				</select>
 			</div>
 		</div>
 	</div>
