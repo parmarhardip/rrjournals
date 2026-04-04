@@ -365,9 +365,26 @@ function rr_academic_paper_meta_box_callback( $post ) {
 		<div class="rr-field-group">
 			<h4><?php _e( 'Content', 'twentyseventeen' ); ?></h4>
 
-			<div class="rr-field-row">
+			<div class="rr-field-row rr-wysiwyg">
 				<label><?php _e( 'Abstract:', 'twentyseventeen' ); ?></label>
-				<textarea name="icp_abstract_content" rows="6"><?php echo esc_textarea( $academic_fields['icp_abstract_content'] ); ?></textarea>
+				<?php
+				wp_editor(
+					$academic_fields['icp_abstract_content'],
+					'icp_abstract_content',
+					array(
+						'textarea_name' => 'icp_abstract_content',
+						'media_buttons' => false,
+						'textarea_rows' => 10,
+						'teeny' => true,
+						'quicktags' => true,
+						'tinymce' => array(
+							'toolbar1' => 'bold,italic,underline,bullist,numlist,link,unlink',
+							'toolbar2' => '',
+							'toolbar3' => '',
+						),
+					)
+				);
+				?>
 			</div>
 
 			<div class="rr-field-row">
@@ -408,9 +425,26 @@ function rr_academic_paper_meta_box_callback( $post ) {
 				$format_label = str_replace( array( 'ice_', '_' ), array( '', ' ' ), $format_key );
 				$format_label = strtoupper( $format_label );
 			?>
-				<div class="rr-field-row">
+				<div class="rr-field-row rr-wysiwyg">
 					<label><?php echo esc_html( $format_label ); ?>:</label>
-					<textarea name="<?php echo esc_attr( $format_key ); ?>" rows="3"><?php echo esc_textarea( $format_value ); ?></textarea>
+					<?php
+					wp_editor(
+						$format_value,
+						$format_key,
+						array(
+							'textarea_name' => $format_key,
+							'media_buttons' => false,
+							'textarea_rows' => 3,
+							'teeny' => true,
+							'quicktags' => true,
+							'tinymce' => array(
+								'toolbar1' => 'bold,italic,underline,link,unlink',
+								'toolbar2' => '',
+								'toolbar3' => '',
+							),
+						)
+					);
+					?>
 				</div>
 			<?php endforeach; ?>
 		</div>

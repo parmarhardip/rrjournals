@@ -64,6 +64,35 @@
     min-height: 80px;
 }
 
+/* WYSIWYG Editor Support */
+.rr-field-row .wp-editor-wrap {
+    flex: 1;
+    min-width: 0;
+}
+
+.rr-field-row .wp-editor-container {
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+}
+
+.rr-field-row .wp-editor-container:focus-within {
+    border-color: #007cba;
+    box-shadow: 0 0 0 1px #007cba;
+}
+
+/* Fix for WYSIWYG fields - use block layout instead of flex */
+.rr-field-row:has(.wp-editor-wrap),
+.rr-field-row.rr-wysiwyg {
+    display: block;
+}
+
+.rr-field-row:has(.wp-editor-wrap) label,
+.rr-field-row.rr-wysiwyg label {
+    display: block;
+    margin-bottom: 6px;
+    padding-top: 0;
+}
+
 /* Repeater Fields */
 .rr-repeater-fields {
     border: 1px solid #ddd;
