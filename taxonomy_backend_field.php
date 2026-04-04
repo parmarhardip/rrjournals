@@ -1,4 +1,9 @@
 <?php
+/**
+ * Security: Prevent direct access
+ */
+defined( 'ABSPATH' ) || exit;
+
 function rr_cp_category_save_form_fields($term_id) {
     $cp_cate_custom_date_name 		 = 'custom-date-field';
     $cp_cate_institute_detail_name 	 = 'institute-detail-field';

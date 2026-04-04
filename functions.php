@@ -1,5 +1,10 @@
 <?php
 /**
+ * Security: Prevent direct access
+ */
+defined( 'ABSPATH' ) || exit;
+
+/**
  * Twenty Seventeen functions and definitions
  *
  * @link https://developer.wordpress.org/themes/basics/theme-functions/
@@ -1442,7 +1447,12 @@ function hp_editor_board_member_callback( $atts ) {
 				</td>
 			</tr>
 			<tr>
-				<td style="text-align: right;">				
+				<td colspan="2">
+					<?php wp_nonce_field( 'ebm_form_action', 'ebm_form_nonce' ); ?>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: right;">
 					<input type="submit" name="submit" value="Submit">
 				</td>
 				<td style="text-align: left;">
@@ -1458,25 +1468,40 @@ function hp_editor_board_member_callback( $atts ) {
 add_shortcode( 'board_member_form', 'hp_editor_board_member_callback' );
 
 
-function hp_ebm_form_ajax_request(){	
+function hp_ebm_form_ajax_request(){
+	// Security: Check nonce first
+	if ( ! isset( $_POST['ebm_form_nonce'] ) || ! wp_verify_nonce( $_POST['ebm_form_nonce'], 'ebm_form_action' ) ) {
+		wp_die( __( 'Security check failed.', 'twentyseventeen' ) );
+	}
+
+	// Security: Rate limiting check
+	if ( ! rr_check_submission_rate_limit( 'ebm_form' ) ) {
+		$json_response = array(
+			'message'  => '<strong>ERROR</strong>: Too many submissions. Please wait before submitting again.',
+			'success'  => false
+		);
+		wp_send_json($json_response);
+		wp_die();
+	}
+
 	session_start();
-	$ebm_name_pre = !empty( $_POST['ebm_name_pre'] )? $_POST['ebm_name_pre'] : '';
-	$ebm_first_name = !empty( $_POST['ebm_first_name'] )? $_POST['ebm_first_name'] : '';
-	$ebm_last_name = !empty( $_POST['ebm_last_name'] )? $_POST['ebm_last_name'] : '';
-	$ebm_contact_no = !empty( $_POST['ebm_contact_no'] )? $_POST['ebm_contact_no'] : '';
-	$ebm_email = !empty( $_POST['ebm_email'] )? $_POST['ebm_email'] : '';
-	$ebm_designation = !empty( $_POST['ebm_designation'] )? $_POST['ebm_designation'] : '';
-	$ebm_institute_name_address = !empty( $_POST['ebm_institute_name_address'] )? $_POST['ebm_institute_name_address'] : '';
-	$ebm_residential_address = !empty( $_POST['ebm_residential_address'] )? $_POST['ebm_residential_address'] : '';
-	$ebm_degree_qualification = !empty( $_POST['ebm_degree_qualification'] )? $_POST['ebm_degree_qualification'] : '';
-	$ebm_subjectArea = !empty( $_POST['ebm_subjectArea'] )? $_POST['ebm_subjectArea'] : '';
-	$ebm_institute_url = !empty( $_POST['ebm_institute_url'] )? $_POST['ebm_institute_url'] : '';
-	$ebm_personal_blog = !empty( $_POST['ebm_personal_blog'] )? $_POST['ebm_personal_blog'] : '';
-	$ebm_google_scholar_profile = !empty( $_POST['ebm_google_scholar_profile'] )? $_POST['ebm_google_scholar_profile'] : '';
-	$ebm_research_gate_url = !empty( $_POST['ebm_research_gate_url'] )? $_POST['ebm_research_gate_url'] : '';
-	$ebm_orcid_id = !empty( $_POST['ebm_orcid_id'] )? $_POST['ebm_orcid_id'] : '';
-	$ebm_ssrn_id = !empty( $_POST['ebm_ssrn_id'] )? $_POST['ebm_ssrn_id'] : '';
-	$captcha1 = !empty( $_POST['captcha1'] )? $_POST['captcha1'] : '';
+	$ebm_name_pre = !empty( $_POST['ebm_name_pre'] )? sanitize_text_field( $_POST['ebm_name_pre'] ) : '';
+	$ebm_first_name = !empty( $_POST['ebm_first_name'] )? sanitize_text_field( $_POST['ebm_first_name'] ) : '';
+	$ebm_last_name = !empty( $_POST['ebm_last_name'] )? sanitize_text_field( $_POST['ebm_last_name'] ) : '';
+	$ebm_contact_no = !empty( $_POST['ebm_contact_no'] )? sanitize_text_field( $_POST['ebm_contact_no'] ) : '';
+	$ebm_email = !empty( $_POST['ebm_email'] )? sanitize_email( $_POST['ebm_email'] ) : '';
+	$ebm_designation = !empty( $_POST['ebm_designation'] )? sanitize_text_field( $_POST['ebm_designation'] ) : '';
+	$ebm_institute_name_address = !empty( $_POST['ebm_institute_name_address'] )? sanitize_textarea_field( $_POST['ebm_institute_name_address'] ) : '';
+	$ebm_residential_address = !empty( $_POST['ebm_residential_address'] )? sanitize_textarea_field( $_POST['ebm_residential_address'] ) : '';
+	$ebm_degree_qualification = !empty( $_POST['ebm_degree_qualification'] )? sanitize_textarea_field( $_POST['ebm_degree_qualification'] ) : '';
+	$ebm_subjectArea = !empty( $_POST['ebm_subjectArea'] )? sanitize_text_field( $_POST['ebm_subjectArea'] ) : '';
+	$ebm_institute_url = !empty( $_POST['ebm_institute_url'] )? esc_url_raw( $_POST['ebm_institute_url'] ) : '';
+	$ebm_personal_blog = !empty( $_POST['ebm_personal_blog'] )? esc_url_raw( $_POST['ebm_personal_blog'] ) : '';
+	$ebm_google_scholar_profile = !empty( $_POST['ebm_google_scholar_profile'] )? esc_url_raw( $_POST['ebm_google_scholar_profile'] ) : '';
+	$ebm_research_gate_url = !empty( $_POST['ebm_research_gate_url'] )? esc_url_raw( $_POST['ebm_research_gate_url'] ) : '';
+	$ebm_orcid_id = !empty( $_POST['ebm_orcid_id'] )? sanitize_text_field( $_POST['ebm_orcid_id'] ) : '';
+	$ebm_ssrn_id = !empty( $_POST['ebm_ssrn_id'] )? sanitize_text_field( $_POST['ebm_ssrn_id'] ) : '';
+	$captcha1 = !empty( $_POST['captcha1'] )? sanitize_text_field( $_POST['captcha1'] ) : '';
 	
 	if( isset( $captcha1 ) && $captcha1 == $_SESSION['code'] ) {
 		
@@ -1647,7 +1672,17 @@ function get_ebm_html_table($editorial_member_details){
 	return ob_get_clean();
 }
 
-function upload_user_file( $file = array() ) {    
+function upload_user_file( $file = array() ) {
+    // Security: Check if user has upload capability
+    if ( ! current_user_can( 'upload_files' ) ) {
+        return false;
+    }
+
+    // Security: Validate file before processing
+    if ( ! rr_validate_uploaded_file( $file ) ) {
+        return false;
+    }
+
     require_once( ABSPATH . 'wp-admin/includes/admin.php' );
     $file_return = wp_handle_upload( $file, array('test_form' => false ) );
     if( isset( $file_return['error'] ) || isset( $file_return['upload_error_handler'] ) ) {		
@@ -1672,6 +1707,121 @@ function upload_user_file( $file = array() ) {
         }
     }
     return false;
+}
+
+/**
+ * Comprehensive file validation function
+ *
+ * @param array $file The uploaded file array
+ * @return bool True if file is valid, false otherwise
+ */
+function rr_validate_uploaded_file( $file ) {
+    // Check if file is provided
+    if ( empty( $file ) || ! isset( $file['tmp_name'] ) || ! isset( $file['name'] ) ) {
+        return false;
+    }
+
+    // Check if file was uploaded without errors
+    if ( ! isset( $file['error'] ) || $file['error'] !== UPLOAD_ERR_OK ) {
+        return false;
+    }
+
+    // Security: Check if file actually exists
+    if ( ! file_exists( $file['tmp_name'] ) || ! is_uploaded_file( $file['tmp_name'] ) ) {
+        return false;
+    }
+
+    // Define allowed file types with MIME validation
+    $allowed_types = array(
+        'pdf' => 'application/pdf',
+        'doc' => 'application/msword',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png'
+    );
+
+    // Get file extension
+    $file_ext = strtolower( pathinfo( $file['name'], PATHINFO_EXTENSION ) );
+
+    // Validate file extension
+    if ( ! array_key_exists( $file_ext, $allowed_types ) ) {
+        return false;
+    }
+
+    // Security: Validate MIME type using finfo
+    if ( function_exists( 'finfo_open' ) ) {
+        $finfo = finfo_open( FILEINFO_MIME_TYPE );
+        $detected_type = finfo_file( $finfo, $file['tmp_name'] );
+        finfo_close( $finfo );
+
+        if ( $detected_type !== $allowed_types[ $file_ext ] ) {
+            return false;
+        }
+    }
+
+    // File size validation (2MB max)
+    $max_size = 2 * 1024 * 1024; // 2MB in bytes
+    if ( $file['size'] > $max_size ) {
+        return false;
+    }
+
+    // Security: Sanitize filename
+    $file['name'] = sanitize_file_name( $file['name'] );
+
+    // Security: Check for executable file extensions in filename
+    $dangerous_extensions = array( 'php', 'phtml', 'php3', 'php4', 'php5', 'pl', 'py', 'jsp', 'asp', 'sh', 'cgi' );
+    foreach ( $dangerous_extensions as $ext ) {
+        if ( strpos( strtolower( $file['name'] ), '.' . $ext ) !== false ) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Rate limiting function to prevent spam submissions
+ *
+ * @param string $form_type The type of form being submitted
+ * @return bool True if submission is allowed, false if rate limited
+ */
+function rr_check_submission_rate_limit( $form_type ) {
+    $user_ip = rr_get_user_ip();
+    $transient_key = 'rr_rate_limit_' . $form_type . '_' . md5( $user_ip );
+
+    // Check if there's an existing submission within the last 5 minutes
+    $last_submission = get_transient( $transient_key );
+
+    if ( $last_submission ) {
+        return false; // Rate limited
+    }
+
+    // Set transient for 5 minutes (300 seconds)
+    set_transient( $transient_key, time(), 300 );
+
+    return true; // Allow submission
+}
+
+/**
+ * Get user IP address safely
+ *
+ * @return string The user's IP address
+ */
+function rr_get_user_ip() {
+    $ip_keys = array( 'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR' );
+
+    foreach ( $ip_keys as $key ) {
+        if ( array_key_exists( $key, $_SERVER ) === true ) {
+            foreach ( array_map( 'trim', explode( ',', $_SERVER[ $key ] ) ) as $ip ) {
+                if ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) !== false ) {
+                    return $ip;
+                }
+            }
+        }
+    }
+
+    return isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
 }
 
 
@@ -2044,8 +2194,8 @@ function rr_sp_form_ajax_request_callback(){
 		
 		}
         
-        $captcha1 					= ( isset( $_POST['captcha1'] ) && !empty( $_POST['captcha1'] ) )? $_POST['captcha1'] : '';
-			if( !isset( $captcha1 ) && $captcha1 !== $_SESSION['code'] ) {
+        $captcha1 					= ( isset( $_POST['captcha1'] ) && !empty( $_POST['captcha1'] ) )? sanitize_text_field( $_POST['captcha1'] ) : '';
+			if( empty( $captcha1 ) || $captcha1 !== $_SESSION['code'] ) {
 				$json_response = array(
 						'message'  => '<strong>ERROR</strong>: Please retry CAPTCHA',
 						'success'       => false
@@ -2054,8 +2204,8 @@ function rr_sp_form_ajax_request_callback(){
 					wp_die(0);
 			}
 	
-        $article_type 					= ( isset( $_POST['article_type'] ) && !empty( $_POST['article_type'] ) )? $_POST['article_type'] : '';
-    	$subject_area 					= ( isset( $_POST['subject_area'] ) && !empty( $_POST['subject_area'] ) )? $_POST['subject_area'] : '';
+        $article_type 					= ( isset( $_POST['article_type'] ) && !empty( $_POST['article_type'] ) )? sanitize_text_field( $_POST['article_type'] ) : '';
+    	$subject_area 					= ( isset( $_POST['subject_area'] ) && !empty( $_POST['subject_area'] ) )? sanitize_text_field( $_POST['subject_area'] ) : '';
     	$title_of_the_paper 			= ( isset( $_POST['title_of_the_paper'] ) && !empty( $_POST['title_of_the_paper'] ) )? sanitize_text_field( $_POST['title_of_the_paper'] ) : '';
     	$first_author_name 				= ( isset( $_POST['first_author_name'] ) && !empty( $_POST['first_author_name'] ) )? sanitize_text_field( $_POST['first_author_name'] ) : '';
     	$first_author_designation 		= ( isset( $_POST['first_author_designation'] ) && !empty( $_POST['first_author_designation'] ) )? sanitize_text_field( $_POST['first_author_designation'] ) : '';
@@ -2220,7 +2370,7 @@ function rr_submit_paper_author_email_send($paper_id, $authoer_email,$author_nam
 	
 	$subject = "Thank you for submitting your article";
 	 
-	$admin_email = "prakashrajkumavat@gmail.com";
+	$admin_email = get_option( 'admin_email' ); // Security: Use WordPress admin email setting
 	$site_title = get_bloginfo( 'name' );
 	$headers = array('Content-Type: text/html; charset=UTF-8;');
 
@@ -3341,11 +3491,9 @@ function rrjournals_new_submit_paper_callback() {
 		</table>
 	</form>
 	<?php
-	echo "<pre>";
-	print_r($_REQUEST);
-	if( isset( $_GET['message'] ) && !empy( $_GET['message'] ) ) {
+	if( isset( $_GET['message'] ) && !empty( $_GET['message'] ) ) {
 	?>
-	<div class="rr_sp_response" id="rr_sp_response"><?php echo html_entity_decode($_GET['message']); ?></div>
+	<div class="rr_sp_response" id="rr_sp_response"><?php echo esc_html( sanitize_text_field( $_GET['message'] ) ); ?></div>
 	<?php
 	}
 	?>
@@ -3372,8 +3520,8 @@ function sp_form_response_callback(){
 	        exit;
         }
         
-        $article_type 					= ( isset( $_POST['article_type'] ) && !empty( $_POST['article_type'] ) )? $_POST['article_type'] : '';
-    	$subject_area 					= ( isset( $_POST['subject_area'] ) && !empty( $_POST['subject_area'] ) )? $_POST['subject_area'] : '';
+        $article_type 					= ( isset( $_POST['article_type'] ) && !empty( $_POST['article_type'] ) )? sanitize_text_field( $_POST['article_type'] ) : '';
+    	$subject_area 					= ( isset( $_POST['subject_area'] ) && !empty( $_POST['subject_area'] ) )? sanitize_text_field( $_POST['subject_area'] ) : '';
     	$title_of_the_paper 			= ( isset( $_POST['title_of_the_paper'] ) && !empty( $_POST['title_of_the_paper'] ) )? sanitize_text_field( $_POST['title_of_the_paper'] ) : '';
     	$first_author_name 				= ( isset( $_POST['first_author_name'] ) && !empty( $_POST['first_author_name'] ) )? sanitize_text_field( $_POST['first_author_name'] ) : '';
     	$first_author_designation 		= ( isset( $_POST['first_author_designation'] ) && !empty( $_POST['first_author_designation'] ) )? sanitize_text_field( $_POST['first_author_designation'] ) : '';
@@ -3542,7 +3690,21 @@ function sp_form_response_callback(){
 	        exit;
           }
           
-          if( isset( $failedAttachment ) && true === $failedAttachment ) {
+          // Security: Additional file validation using our secure function
+          if ( ! rr_validate_uploaded_file( $uploadedFile ) ) {
+            $failedKeys[]     = 'rr_sp_file';
+            $failedFields[]   = 'Uploaded File';
+            $failedAttachment = true;
+            $message = my_contact_form_generate_response("error", "File validation failed. Please ensure you are uploading a valid PDF, DOC, DOCX, JPG, or PNG file.");
+            $query_string = array(
+                'response' => 'error',
+                'message' => htmlentities( $message ),
+            );
+            wp_redirect(esc_url( add_query_arg( $query_string, get_permalink('5104') ) ));
+            exit;
+          }
+
+          if( ! isset( $failedAttachment ) || false === $failedAttachment ) {
             $movefile = wp_handle_upload($uploadedFile, $upload_overrides);
             if($movefile && ! isset( $movefile['error'] ) ) {
                 update_post_meta($post_id,'attached_file_id',$attach_id);
