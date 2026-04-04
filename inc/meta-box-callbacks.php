@@ -16,6 +16,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Editorial Information Meta Box Callback
  */
 function rr_editorial_meta_box_callback( $post ) {
+	// Check if this meta box should display for this post/page
+	if ( ! rr_should_show_editorial_metabox( $post ) ) {
+		echo '<p>' . __( 'Editorial information is not applicable for this content type.', 'twentyseventeen' ) . '</p>';
+		return;
+	}
+
 	// Add nonce for security
 	wp_nonce_field( 'rr_save_meta_data', 'rr_meta_nonce' );
 
@@ -194,6 +200,12 @@ function rr_render_board_member_row( $index, $ebm ) {
  * Academic Paper Information Meta Box Callback
  */
 function rr_academic_paper_meta_box_callback( $post ) {
+	// Check if this meta box should display for this post
+	if ( ! rr_should_show_academic_metabox( $post ) ) {
+		echo '<p>' . __( 'Academic paper information is not applicable for this content type.', 'twentyseventeen' ) . '</p>';
+		return;
+	}
+
 	// Add nonce for security
 	wp_nonce_field( 'rr_save_meta_data', 'rr_meta_nonce' );
 
@@ -378,6 +390,12 @@ function rr_academic_paper_meta_box_callback( $post ) {
  * Book Information Meta Box Callback
  */
 function rr_book_meta_box_callback( $post ) {
+	// Check if this meta box should display for this post
+	if ( ! rr_should_show_book_metabox( $post ) ) {
+		echo '<p>' . __( 'Book information is not applicable for this content type.', 'twentyseventeen' ) . '</p>';
+		return;
+	}
+
 	// Add nonce for security
 	wp_nonce_field( 'rr_save_meta_data', 'rr_meta_nonce' );
 

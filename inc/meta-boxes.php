@@ -13,13 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Register custom meta boxes for all post types
+ * Register custom meta boxes with conditional loading.
  */
 function rr_register_meta_boxes() {
-	$post_types = array( 'page', 'post', 'rr_issue', 'rr_cp_post', 'rr_cv', 'rr_special_issue', 'rr_sp_paper_list', 'hr_em' );
-
-	foreach ( $post_types as $post_type ) {
-		// Editorial Board Meta Box (for pages like board-member)
+	// Editorial Board Meta Box - for pages with board-related templates
+	$editorial_post_types = array( 'page' );
+	foreach ( $editorial_post_types as $post_type ) {
 		add_meta_box(
 			'rr_editorial_meta_box',
 			__( 'Editorial Information', 'twentyseventeen' ),
@@ -28,8 +27,11 @@ function rr_register_meta_boxes() {
 			'normal',
 			'high'
 		);
+	}
 
-		// Academic Paper Meta Box (for issues and papers)
+	// Academic Paper Meta Box - for issues, papers, and academic content
+	$academic_post_types = array( 'post', 'rr_issue', 'rr_cp_post', 'rr_special_issue', 'rr_sp_paper_list', 'rr_submited_paper' );
+	foreach ( $academic_post_types as $post_type ) {
 		add_meta_box(
 			'rr_academic_paper_meta_box',
 			__( 'Academic Paper Information', 'twentyseventeen' ),
@@ -38,8 +40,11 @@ function rr_register_meta_boxes() {
 			'normal',
 			'high'
 		);
+	}
 
-		// Book Information Meta Box (for HR development)
+	// Book Information Meta Box - for HR development content
+	$book_post_types = array( 'hr_em', 'page' );
+	foreach ( $book_post_types as $post_type ) {
 		add_meta_box(
 			'rr_book_meta_box',
 			__( 'Book Information', 'twentyseventeen' ),
@@ -373,3 +378,65 @@ function rr_render_board_member_template() {
 	<?php
 }
 add_action( 'admin_footer', 'rr_render_board_member_template' );
+
+/**
+ * Conditional Meta Box Display Functions
+ */
+
+/**
+ * Check if editorial meta box should display.
+ */
+function rr_should_show_editorial_metabox( $post ) {
+	// Show for pages that might have editorial content
+	if ( 'page' === $post->post_type ) {
+		$page_template = get_page_template_slug( $post->ID );
+		$editorial_templates = array(
+			'page-board-member.php',
+			'page-journal-reviewers.php',
+			'page-jebm.php',
+			''
+		);
+
+		// Check by page slug if no specific template
+		$page_slug = $post->post_name;
+		$editorial_slugs = array( 'board-member', 'editorial-board', 'journal-reviewers', 'reviewers', 'jebm' );
+
+		return in_array( $page_template, $editorial_templates, true ) ||
+			   in_array( $page_slug, $editorial_slugs, true );
+	}
+
+	return false;
+}
+
+/**
+ * Check if academic paper meta box should display.
+ */
+function rr_should_show_academic_metabox( $post ) {
+	// Show for academic content post types
+	$academic_types = array( 'post', 'rr_issue', 'rr_cp_post', 'rr_special_issue', 'rr_sp_paper_list', 'rr_submited_paper' );
+	return in_array( $post->post_type, $academic_types, true );
+}
+
+/**
+ * Check if book meta box should display.
+ */
+function rr_should_show_book_metabox( $post ) {
+	// Show for HR development posts
+	if ( 'hr_em' === $post->post_type ) {
+		return true;
+	}
+
+	// Show for specific pages related to books/downloads
+	if ( 'page' === $post->post_type ) {
+		$page_template = get_page_template_slug( $post->ID );
+		$book_templates = array( 'page-book-download.php' );
+
+		$page_slug = $post->post_name;
+		$book_slugs = array( 'hr-development', 'book-download', 'books', 'downloads' );
+
+		return in_array( $page_template, $book_templates, true ) ||
+			   in_array( $page_slug, $book_slugs, true );
+	}
+
+	return false;
+}
