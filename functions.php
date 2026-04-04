@@ -1684,7 +1684,7 @@ function upload_user_file( $file = array() ) {
     }
 
     require_once( ABSPATH . 'wp-admin/includes/admin.php' );
-    $file_return = wp_handle_upload( $file, array('test_form' => false ) );
+    $file_return = wp_handle_upload( $file, array('test_form' => true ) );
     if( isset( $file_return['error'] ) || isset( $file_return['upload_error_handler'] ) ) {		
         return false;
     } else {
@@ -2163,7 +2163,7 @@ function rrjournals_submit_paper_callback( $atts ) {
 				    // Generate a custom nonce value.
 	                $sp_form_meta_nonce = wp_create_nonce( 'rr_sp_meta_form_nonce' ); 
 				    ?>
-					<input type="hidden" name="sp_submit_meta_nonce" id="sp_submit_meta_nonce" value="<?php echo $sp_form_meta_nonce ?>" />
+					<input type="hidden" name="sp_submit_meta_nonce" id="sp_submit_meta_nonce" value="<?php echo esc_attr($sp_form_meta_nonce); ?>" />
 					<input type="hidden" name="action" value="rr_sp_form_ajax_request">
 					<input type="submit" name="submit" value="Submit">
 					
@@ -2413,7 +2413,7 @@ function rr_sj_email_html($name = null,$paper_id = null){
 
                 <p>Dear Author (s),</p>
                 <p>We thank you for submitting your article with Research Review Journals.</p> 
-				<p>We have received your article with article Ref. No.<strong>#<?php echo $paper_id; ?></strong></p>
+				<p>We have received your article with article Ref. No.<strong>#<?php echo esc_html($paper_id); ?></strong></p>
 				<p>Kindly use above given reference number for future correspondence.</p>
 				<p>Our all correspondence related to this article will be sent to the email address you submitted as corresponding author's email.</p>
 				<p>Further notes;
@@ -2715,14 +2715,16 @@ function the_list_of_volumn() {
 
 function get_year(){
 	if( isset( $_GET['year'] ) && !empty( $_GET['year'] ) ) {
-		return $_GET['year'];
+		return absint($_GET['year']);
 	}
+	return 0;
 }
 
 function get_month(){
 	if( isset( $_GET['month'] ) && !empty( $_GET['month'] ) ) {
-		return $_GET['month'];
+		return absint($_GET['month']);
 	}
+	return 0;
 }
 function get_month_table( $year ){
     
@@ -2847,18 +2849,18 @@ function get_certificate_by_number(){
 	
 	if (  ! wp_verify_nonce( $_REQUEST['_wpnonce'] , 'valid_certificate' ) ) {
 		print 'Sorry, your nonce did not verify.';exit;
-		$post_id = !empty( $_POST['post_id'] ) ? $_POST['post_id'] : 0;
+		$post_id = !empty( $_POST['post_id'] ) ? absint($_POST['post_id']) : 0;
 		$url = get_permalink( $post_id );
 		wp_redirect($url.'?response=false&code=0');		
 	} 	
 	
-	$certificate_number = !empty( $_POST['certificate_number'] )? $_POST['certificate_number'] : '';
+	$certificate_number = !empty( $_POST['certificate_number'] )? sanitize_text_field($_POST['certificate_number']) : '';
 	$page = get_page_by_title( $certificate_number, OBJECT, 'rr_cv' );
 	if( isset( $page ) && !empty( $page ) ) {
 		$url = get_permalink( $page->ID );
 		wp_redirect($url);
 	} else {
-		$post_id = !empty( $_POST['post_id'] ) ? $_POST['post_id'] : 0;
+		$post_id = !empty( $_POST['post_id'] ) ? absint($_POST['post_id']) : 0;
 		$url = get_permalink( $post_id );
 		wp_redirect($url.'?response=false&code=1');
 	}
@@ -2903,7 +2905,7 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 	<tr valign="top" id="<?php echo "post-".$issue_id; ?>">
 		<td id="ar_row_ind" align="right"><?php echo $issue_count; ?></td>				
 		<td width="98%" valign="middle">
-			<h2 class="citation_title"><a href="<?php echo esc_url(get_permalink($issue_id)); ?>"><?php echo $issue_title; ?></a></h2>
+			<h2 class="citation_title"><a href="<?php echo esc_url(get_permalink($issue_id)); ?>"><?php echo esc_html($issue_title); ?></a></h2>
 		</td>
 	</tr>				
 	<?php if( !empty( $icp_authors_names_loop  ) && is_array( $icp_authors_names_loop  ) ) { ?>
@@ -2914,7 +2916,7 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 			$icp_loop = 1;
 			$numItems = count( $icp_authors_names_loop );
 			foreach ( $icp_authors_names_loop as $icp_authors_names ) {?>						
-				<a href="#"><?php echo $icp_authors_names['icp_author_name']; ?></a>
+				<a href="#"><?php echo esc_html($icp_authors_names['icp_author_name']); ?></a>
 				<sup><a href="#au1"><?php echo $icp_loop; ?></a></sup>
 			<?php  if( $numItems != $icp_loop ) { echo '; ';} $icp_loop++; 
 			} 
@@ -2958,7 +2960,7 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 				<?php } elseif ( isset( $ice_pdf_upload ) && ! empty( $ice_pdf_upload ) ) { ?>
 					<li>
 						<?php if ( $abstract_after_line ) { echo '| '; } ?>
-						<a title="<?php echo esc_attr( $issue_title ); ?>" href="<?php echo $ice_pdf_upload; ?>" download target="_blank" class="pdf">PDF (<?php echo $fileSize; ?>)</a>
+						<a title="<?php echo esc_attr( $issue_title ); ?>" href="<?php echo esc_url($ice_pdf_upload); ?>" download target="_blank" class="pdf">PDF (<?php echo $fileSize; ?>)</a>
 					</li>
 				<?php } 
 				
@@ -2969,7 +2971,7 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 				$ice_vancouver 		= rr_get_field( 'ice_vancouver', $issue_id );
 				if( !empty( $ice_mla ) || !empty( $ice_apa ) || !empty( $ice_chicago ) || !empty( $ice_harvard ) || !empty( $ice_vancouver ) ) {
 				?>
-				<li>| <a title="<?php echo $issue_title; ?>" class="cite_Btn" href="javascript:void(0);">Cite</a>
+				<li>| <a title="<?php echo esc_attr($issue_title); ?>" class="cite_Btn" href="javascript:void(0);">Cite</a>
 					<div class="cite_model modal">
 					<span class="close">&times;</span>
 					  <div class="modal-content">						
@@ -3018,7 +3020,7 @@ function the_single_issue_content_html( $issue_id, $issue_title, $issue_count ) 
 			<img id="img" src="<?php echo get_template_directory_uri(); ?>/assets/images/1024px-DOI_logo.svg.png">
 		</td>
 		<td>
-			<a title="<?php echo $icp_doi; ?>" class="ico_doi_link" href="<?php echo $icp_doi; ?>"><?php echo $icp_doi; ?></a>
+			<a title="<?php echo esc_attr($icp_doi); ?>" class="ico_doi_link" href="<?php echo esc_url($icp_doi); ?>"><?php echo esc_html($icp_doi); ?></a>
 		</td>
 	</tr>
 	<?php } ?>
@@ -3098,7 +3100,7 @@ function submited_paper_download_callback( $post ) {
 	<?php    
     } else {
     ?>	
-	<a href="mailto:<?php echo $email; ?>">Please Contact to <strong>"<?php echo $email;?>"</strong> Becuase file is not upload propurly</a>
+	<a href="mailto:<?php echo esc_attr($email); ?>">Please Contact to <strong>"<?php echo esc_html($email); ?>"</strong> Becuase file is not upload propurly</a>
 	<?php
     }
 }
@@ -3481,7 +3483,7 @@ function rrjournals_new_submit_paper_callback() {
 	                $sp_form_meta_nonce = wp_create_nonce( 'rr_sp_meta_form_nonce' ); 
 				    ?>
 					<input type="hidden" name="action" value="sp_form_response">
-		            <input type="hidden" name="sp_submit_meta_nonce" value="<?php echo $sp_form_meta_nonce ?>" />
+		            <input type="hidden" name="sp_submit_meta_nonce" value="<?php echo esc_attr($sp_form_meta_nonce); ?>" />
 					<input type="submit" name="submit" value="Submit">
 				</td>
 				<td style="text-align: left;">
@@ -3654,7 +3656,7 @@ function sp_form_response_callback(){
           //Settings
           $max_allowed_file_size  = 2000; // size in KB
           $allowed_extensions     = array("jpg", "jpeg", "png", "pdf");
-          $upload_overrides       = array( 'test_form' => false );
+          $upload_overrides       = array( 'test_form' => true );
 
           //Validations
           if($size_of_uploaded_file > $max_allowed_file_size){

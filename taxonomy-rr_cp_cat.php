@@ -50,7 +50,7 @@ $institute_url_field 	  = !empty($term_metas['institute-url-field']) ? $term_met
 				$cp_cat_image_file = get_field('cp_cat_image'.$slider_image, $term);				
 					if( !empty( $cp_cat_image_file ) ) {											
 						?>
-						<li><img src="<?php echo $cp_cat_image_file['url']; ?>" /></li>			  
+						<li><img src="<?php echo esc_url($cp_cat_image_file['url']); ?>" /></li>			  
 						<?php
 						$is_slider = true;
 					} 
