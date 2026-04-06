@@ -234,9 +234,25 @@ function rr_save_meta_box_data( $post_id ) {
 		rr_save_meta_array( $post_id, 'editorial_board_members', $board_members );
 	}
 
-	// Save Academic Paper Data (arrays)
+	// Save Authors Data (complex nested structure)
+	if ( isset( $_POST['icp_authors_names'] ) && is_array( $_POST['icp_authors_names'] ) ) {
+		$authors = array();
+		foreach ( $_POST['icp_authors_names'] as $author ) {
+			if ( ! empty( $author['icp_author_name'] ) ) {
+				$clean_author = array(
+					'icp_author_name' => sanitize_text_field( $author['icp_author_name'] ),
+					'icp_author_email' => sanitize_email( $author['icp_author_email'] ?? '' ),
+					'ice_author_about' => sanitize_textarea_field( $author['ice_author_about'] ?? '' )
+				);
+				$authors[] = $clean_author;
+			}
+		}
+		rr_save_meta_array( $post_id, 'icp_authors_names', $authors );
+	}
+
+	// Save Academic Paper Data (simple arrays)
 	$academic_arrays = array(
-		'icp_authors_names', 'icp_abstract', 'icp_keywords', 'icp_references',
+		'icp_abstract', 'icp_keywords', 'icp_references',
 		'icp_citation_mla', 'icp_citation_apa', 'icp_citation_chicago',
 		'icp_citation_harvard', 'icp_citation_vancouver'
 	);
