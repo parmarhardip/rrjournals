@@ -2640,7 +2640,7 @@ function get_file_size( $file_id ){
 	if( empty( $file_id ) ) {
 		return false;
 	}
-	return $fileSize   = size_format( filesize( get_attached_file( $file_id ) ) );
+	return size_format( filesize( get_attached_file( $file_id ) ) );
 }
 
 function get_category_toggle_list() {

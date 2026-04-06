@@ -83,7 +83,7 @@ function rr_save_meta_array( $post_id, $meta_key, $data ) {
 		delete_post_meta( $post_id, $meta_key );
 		return;
 	}
-	update_post_meta( $post_id, $meta_key, wp_json_encode( $data ) );
+	update_post_meta( $post_id, $meta_key, json_encode( $data, JSON_UNESCAPED_UNICODE ) );
 }
 
 /**
